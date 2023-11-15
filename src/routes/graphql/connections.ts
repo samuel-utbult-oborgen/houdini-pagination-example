@@ -3,6 +3,8 @@
  * It's licensed under the MIT license found at the bottom of the file (per the project's agreement)
  */
 
+import { cursorToOffset, offsetToCursor } from "$lib/cursor";
+
 export type Args = {
     after: string;
     before: string;
@@ -104,21 +106,6 @@ function connectionFromArraySlice<TElement>(
         totalCount: arraySlice.length,
     };
 }
-const PREFIX = "arrayconnection:";
-
-/**
- * Creates the cursor string from an offset.
- */
-export function offsetToCursor(offset: number): string {
-    return base64(PREFIX + offset.toString());
-}
-
-/**
- * Extracts the offset from the cursor string.
- */
-export function cursorToOffset(cursor: string): number {
-    return parseInt(unbase64(cursor).substring(PREFIX.length), 10);
-}
 
 /**
  * Return the cursor associated with an object in an array.
@@ -148,14 +135,6 @@ export function getOffsetWithDefault(
     }
     const offset = cursorToOffset(cursor);
     return isNaN(offset) ? defaultOffset : offset;
-}
-
-function base64(str: string): string {
-    return btoa(str);
-}
-
-function unbase64(str: string): string {
-    return atob(str);
 }
 
 /**

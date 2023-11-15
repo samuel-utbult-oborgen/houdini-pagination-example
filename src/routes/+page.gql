@@ -1,0 +1,10 @@
+query GetCustomers {
+    customers {
+        edges {
+            node {
+                id
+                name
+            }
+        }
+    }
+}

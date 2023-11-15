@@ -1,0 +1,14 @@
+query GetCurrencies($after: String) {
+    currencies(first: 10, after: $after) @paginate {
+        edges {
+            node {
+                id
+                name
+            }
+        }
+        pageInfo {
+            hasPreviousPage
+            hasNextPage
+        }
+    }
+}

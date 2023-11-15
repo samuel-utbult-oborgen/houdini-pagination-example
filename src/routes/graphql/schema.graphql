@@ -33,8 +33,8 @@ type CountriesConnection {
 }
 
 type CountriesEdge {
-	cursor: String
-	node: Country
+	cursor: String!
+	node: Country!
 }
 
 # Currency
@@ -50,8 +50,8 @@ type CurrenciesConnection {
 }
 
 type CurrenciesEdge {
-	cursor: String
-	node: Currency
+	cursor: String!
+	node: Currency!
 }
 
 # Customer
@@ -69,8 +69,8 @@ type CustomersConnection {
 }
 
 type CustomersEdge {
-	cursor: String
-	node: Customer
+	cursor: String!
+	node: Customer!
 }
 
 # PageInfo
