@@ -1,0 +1,82 @@
+# Query
+type Query {
+    countries(
+        first: Int,
+        after: String,
+        last: Int,
+        before: String): CountriesConnection!
+    country(id: Int!): Currency!
+    currencies(
+        first: Int,
+        after: String,
+        last: Int,
+        before: String): CurrenciesConnection!
+    currency(id: Int!): Currency!
+    customers(
+        first: Int,
+        after: String,
+        last: Int,
+        before: String): CustomersConnection!
+    customer(id: Int!): Customer!
+}
+
+# Country
+type Country {
+	id: Int!
+	name: String!
+}
+
+type CountriesConnection {
+	edges: [CountriesEdge!]!
+	pageInfo: PageInfo!
+	totalCount: Int!
+}
+
+type CountriesEdge {
+	cursor: String
+	node: Country
+}
+
+# Currency
+type Currency {
+	id: Int!
+	name: String!
+}
+
+type CurrenciesConnection {
+	edges: [CurrenciesEdge!]!
+	pageInfo: PageInfo!
+	totalCount: Int!
+}
+
+type CurrenciesEdge {
+	cursor: String
+	node: Currency
+}
+
+# Customer
+type Customer {
+	id: Int!
+	name: String!
+    countryID: Int!
+    currencyID: Int!
+}
+
+type CustomersConnection {
+	edges: [CustomersEdge!]!
+	pageInfo: PageInfo!
+	totalCount: Int!
+}
+
+type CustomersEdge {
+	cursor: String
+	node: Customer
+}
+
+# PageInfo
+type PageInfo {
+	endCursor: String
+	hasNextPage: Boolean!
+	hasPreviousPage: Boolean!
+	startCursor: String
+}

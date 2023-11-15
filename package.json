@@ -23,6 +23,8 @@
         "eslint": "^8.28.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-svelte": "^2.30.0",
+        "graphql": "^16.8.1",
+        "graphql-yoga": "^5.0.0",
         "prettier": "^3.0.0",
         "prettier-plugin-svelte": "^3.0.0",
         "svelte": "^4.0.5",
