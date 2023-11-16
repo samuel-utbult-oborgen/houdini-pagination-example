@@ -3,9 +3,9 @@
         GetCurrenciesStore,
         type CurrencyFieldFragment,
         CurrencyFieldFragmentStore,
+        type CurrencyFieldFragment$data,
     } from "$houdini";
     import { idToCursor } from "$lib/cursor";
-    import CurrencyFieldElement from "./CurrencyFieldElement.svelte";
 
     export let selected: CurrencyFieldFragment;
 
@@ -32,23 +32,40 @@
 
     $: selectedCurrency && load(selectedCurrency.id);
 
-    $: data = $store.data;
+    let open = false;
+
+    function setCurrency(newCurrency: CurrencyFieldFragment$data) {
+        return () => {
+            selectedCurrency = newCurrency;
+            open = false;
+        };
+    }
 </script>
 
-{#if data}
-    {#if data.currencies.pageInfo.hasPreviousPage}
-        <button on:click={() => store.loadPreviousPage()}>Previous</button>
-    {/if}
-
-    <ul>
-        {#each $store.data?.currencies.edges ?? [] as currency (currency.node.id)}
-            <li>
-                <CurrencyFieldElement element={currency.node} />
-            </li>
-        {/each}
-    </ul>
-
-    {#if data.currencies.pageInfo.hasNextPage}
-        <button on:click={() => store.loadNextPage()}>Next</button>
-    {/if}
+{#if selectedCurrency}
+    <div class={open ? "dropdown is-active" : "dropdown"}>
+        <div class="dropdown-trigger">
+            <button class="button" on:click={() => (open = !open)}>
+                <span>{selectedCurrency.name}</span>
+            </button>
+        </div>
+        <div class="dropdown-menu">
+            <div class="dropdown-content">
+                {#each $store.data?.currencies.edges ?? [] as currency (currency.node.id)}
+                    <!-- svelte-ignore a11y-missing-attribute -->
+                    <a
+                        class={selectedCurrency.id === currency.node.id
+                            ? "dropdown-item is-active"
+                            : "dropdown-item"}
+                        on:click={setCurrency(currency.node)}
+                        on:keyup={setCurrency(currency.node)}
+                        role="button"
+                        tabindex={currency.node.id}
+                    >
+                        {currency.node.name}
+                    </a>
+                {/each}
+            </div>
+        </div>
+    </div>
 {/if}
