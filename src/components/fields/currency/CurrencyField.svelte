@@ -6,6 +6,8 @@
         type CurrencyFieldFragment$data,
     } from "$houdini";
     import { idToCursor } from "$lib/cursor";
+    import ProgressBar from "./ProgressBar.svelte";
+    import VirtualList from "./VirtualList.svelte";
 
     export let selected: CurrencyFieldFragment;
 
@@ -40,9 +42,16 @@
             open = false;
         };
     }
+
+    $: loadUp = $store.data?.currencies.pageInfo.hasPreviousPage
+        ? () => store.loadPreviousPage()
+        : null;
+    $: loadDown = $store.data?.currencies.pageInfo.hasNextPage
+        ? () => store.loadNextPage()
+        : null;
 </script>
 
-{#if selectedCurrency}
+{#if selectedCurrency && $store.data}
     <div class={open ? "dropdown is-active" : "dropdown"}>
         <div class="dropdown-trigger">
             <button class="button" on:click={() => (open = !open)}>
@@ -51,20 +60,45 @@
         </div>
         <div class="dropdown-menu">
             <div class="dropdown-content">
-                {#each $store.data?.currencies.edges ?? [] as currency (currency.node.id)}
-                    <!-- svelte-ignore a11y-missing-attribute -->
-                    <a
-                        class={selectedCurrency.id === currency.node.id
-                            ? "dropdown-item is-active"
-                            : "dropdown-item"}
-                        on:click={setCurrency(currency.node)}
-                        on:keyup={setCurrency(currency.node)}
-                        role="button"
-                        tabindex={currency.node.id}
-                    >
-                        {currency.node.name}
-                    </a>
-                {/each}
+                <VirtualList
+                    scrollElementStyle="max-height: 20em"
+                    elements={$store.data.currencies.edges}
+                    getKey={(currency) => currency.node.id}
+                    selectedKey={selectedCurrency.id}
+                    {loadUp}
+                    {loadDown}
+                >
+                    <svelte:fragment slot="loading-init">
+                        <ProgressBar />
+                    </svelte:fragment>
+                    <svelte:fragment slot="loading-top" let:loading>
+                        {#if loading}
+                            <ProgressBar />
+                        {/if}
+                    </svelte:fragment>
+                    <svelte:fragment slot="loading-bottom" let:loading>
+                        {#if loading}
+                            <ProgressBar />
+                        {/if}
+                    </svelte:fragment>
+                    <svelte:fragment slot="no-entries">
+                        Nothing found
+                    </svelte:fragment>
+                    <svelte:fragment slot="entry" let:entry>
+                        <!-- svelte-ignore a11y-missing-attribute -->
+                        <a
+                            class={selectedCurrency.id === entry.node.id
+                                ? "dropdown-item is-active"
+                                : "dropdown-item"}
+                            on:click={setCurrency(entry.node)}
+                            on:keyup={setCurrency(entry.node)}
+                            role="button"
+                            tabindex={entry.node.id}
+                        >
+                            {entry.node.name}
+                        </a>
+                    </svelte:fragment>
+                </VirtualList>
             </div>
         </div>
     </div>
