@@ -3,7 +3,7 @@ query GetCurrencies($after: String) {
         edges {
             node {
                 id
-                name
+                ...CurrencyFieldFragment
             }
         }
         pageInfo {

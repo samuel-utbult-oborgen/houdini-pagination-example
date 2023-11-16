@@ -2,6 +2,8 @@ query GetCustomer($id: Int!) {
     customer(id: $id) {
         name
         countryID
-        currencyID
+        currency {
+            ...CurrencyFieldFragment
+        }
     }
 }

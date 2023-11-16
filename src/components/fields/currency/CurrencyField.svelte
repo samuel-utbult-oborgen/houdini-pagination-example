@@ -1,11 +1,25 @@
 <script lang="ts">
-    import { GetCurrenciesStore } from "$houdini";
+    import {
+        GetCurrenciesStore,
+        type CurrencyFieldFragment,
+        CurrencyFieldFragmentStore,
+    } from "$houdini";
     import { idToCursor } from "$lib/cursor";
+    import CurrencyFieldElement from "./CurrencyFieldElement.svelte";
 
-    export let selectedID: number | null;
+    export let selected: CurrencyFieldFragment;
+
+    const currencyFieldFragmentStore = new CurrencyFieldFragmentStore();
+    const readableCurrency = currencyFieldFragmentStore.get(selected);
+    $: selectedCurrency = $readableCurrency;
 
     const store = new GetCurrenciesStore();
+    let loadCalled = false;
     async function load(_selectedID: number | null) {
+        if (loadCalled) {
+            return;
+        }
+        loadCalled = true;
         await store.fetch({
             variables: {
                 after: _selectedID ? idToCursor(_selectedID) : null,
@@ -16,7 +30,7 @@
         }
     }
 
-    $: load(selectedID);
+    $: selectedCurrency && load(selectedCurrency.id);
 
     $: data = $store.data;
 </script>
@@ -27,8 +41,10 @@
     {/if}
 
     <ul>
-        {#each $store.data?.currencies.edges ?? [] as currency}
-            <li>{currency.node.id} - {currency.node.name}</li>
+        {#each $store.data?.currencies.edges ?? [] as currency (currency.node.id)}
+            <li>
+                <CurrencyFieldElement element={currency.node} />
+            </li>
         {/each}
     </ul>
 

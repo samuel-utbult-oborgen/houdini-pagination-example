@@ -1,0 +1,4 @@
+fragment CurrencyFieldFragment on Currency {
+    id
+    name
+}

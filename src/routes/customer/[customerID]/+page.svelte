@@ -1,7 +1,7 @@
 <script lang="ts">
     import { browser } from "$app/environment";
     import CurrencyField from "../../../components/fields/currency/CurrencyField.svelte";
-    import type { PageData } from "./$types";
+    import type { PageData } from "./$houdini";
 
     export let data: PageData;
     $: ({ GetCustomer } = data);
@@ -15,6 +15,6 @@
     <br />
 
     {#if browser}
-        <CurrencyField selectedID={customerData.customer.id} />
+        <CurrencyField selected={customerData.customer.currency} />
     {/if}
 {/if}
