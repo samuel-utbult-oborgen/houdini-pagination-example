@@ -1,5 +1,5 @@
-query GetCurrencies($after: String) {
-    currencies(first: 20, after: $after) @paginate {
+query GetCountries($after: String) {
+    countries(first: 20, after: $after) @paginate {
         edges {
             node {
                 id

@@ -1,0 +1,4 @@
+fragment CountryFieldFragment on Country {
+    id
+    name
+}

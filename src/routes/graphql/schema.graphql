@@ -62,6 +62,7 @@ type Customer {
     id: Int!
     name: String!
     countryID: Int!
+    country: Country!
     currencyID: Int!
     currency: Currency!
 }
